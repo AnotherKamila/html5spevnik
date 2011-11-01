@@ -100,10 +100,33 @@ mi chyba", vypytat si to je na Uploaderi.
 
 Edit: poriadnejsie opisane nizsie
 
+Odvec 0: Pluggable architektura (uz nie zufalo dufam)
+=====================================================
+
+Disclaimer: Nasledujuce vysoko pravdepodobne stale nedava zmysel.
+
+
+
+
 Odvec 0: Zufalo pluggable architektura
 ======================================
 
-Disclaimer: Nasledujuce vysoko pravdepodobne vobec nedava zmysel.
+Disclaimer: Nasledujuce vysoko pravdepodobne stale nedava zmysel.
+
+Pluginy stale potrebuju mat nieco na sposob typu, to aby sa vedelo ako treba
+pozmenit databazu, koho vsetkeho sa pytat pri uploade a pod. Resp. mozno to chce
+aj tu hierarchiu metapluginov, kde metaplugin sa vie pichnut kam len chce tymi
+eventami. EDIT: Urcite to chce hierarchiu metapluginov, mozno sa to chce inak
+volat. Vid porovnanie s Drupalom (moj plugin je konkretny naimplementovany hook,
+typ pluginu je ktory hook predefinovavame) (dakujem Tomi :D)
+
+Teda: Mam pekny event emitter, do ktoreho sa napichavaju metapluginy. Tie robia
+taky interface pluginom. Analogia s Drupalom: emittnem event -> volam invoke,
+metaplugin vola pluginy -> invoke pozavolava foo_hook(parametre co treba),
+plugin si robi veci v ramci svojho interfacu -> foo_hook robi co chce so svojimi
+parametrami
+
+Nasledujuce nechavam for reference, v procese upratovania.
 
 Stage 1: Este OK
 ----------------
