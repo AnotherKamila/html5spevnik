@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <title>{{ page.title }}</title>
+        <meta name="author" content="Kamila Součková">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="stylesheet" href="assets/sitewide.css">
+    </head>
+    <body>
+        {% include header.html %}
+        <div class="content">
+            {{ content }}
+        </div><!-- content -->
+        {% include footer.html %}
+    </body>
+</html>

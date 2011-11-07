@@ -1,0 +1,325 @@
+/* normalize */
+/* some things from http://github.com/necolas/normalize.css, see there for reference */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section {
+	display: block;
+}
+
+html {
+	font-size: 100%;
+	overflow-y: scroll;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	min-height: 100%;
+	z-index: 0;
+}
+
+a:hover,
+a:active {
+	outline: 0;
+}
+
+h1 {
+	font-size: 1.8em;
+	padding: 0;
+	font-weight: normal;
+}
+
+abbr {
+	border-bottom: 1px dotted;
+}
+
+mark {
+	background: #ff0;
+	color: #000;
+}
+
+pre, code, kbd, samp {
+	font-family: 'Consolas', 'Courier New', monospace;
+	font-size: 1em;
+}
+
+pre {
+	white-space: pre;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+small {
+	font-size: 75%;
+}
+
+sub, sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+sup {
+	top: -0.5em;
+}
+sub {
+	bottom: -0.25em;
+}
+
+ul, ol {
+	margin-left: 0;
+	padding: 0 0 0 40px;
+}
+
+img {
+	border: 0;
+	-ms-interpolation-mode: bicubic;
+}
+
+/* generic */
+
+@font-face { /* lte IE8 */
+    font-family: 'Junction';
+    src: url('junction_02-webfont.eot');
+}
+
+@font-face { /* everything else */
+    font-family: 'Junction';
+    src: url(//:) format('no404'), url('junction_02-webfont.woff') format('woff'), url('junction_02-webfont.ttf') format('truetype'), url('junction_02-webfont.svg#Junction') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+	background: #fafafa;
+	font-family: 'Junction', 'Helvetica', sans-serif;
+}
+
+a, a:visited {
+	color: #777;
+	text-decoration: none;
+	border-bottom: 1px solid #777;
+}
+a:hover, a:active {
+	border-color: #07f;
+}
+
+p {
+	margin: .7em 0;
+}
+
+ul {
+	list-style: none;
+	list-style-type: none;
+	margin: 0; padding: 0;
+}
+ul li::before {
+	content: '→';
+	color: #777;
+	margin-right: 0.4em;
+}
+
+/* header, footer */
+
+header.sitewide,
+footer.sitewide {
+	position: relative;
+	background: #252525;
+	text-shadow: 0 -2px 1px #000;
+	color: #777;
+	z-index: 1;
+}
+header.sitewide {
+	padding: 1.5em 2.5em;
+	-moz-box-shadow: 0 5px 40px #000;
+	-webkit-box-shadow: 0 5px 40px #000;
+	box-shadow: 0 5px 40px #000;
+}
+footer.sitewide {
+	padding: 1em 2.5em;
+	-moz-box-shadow: 0 -3px 45px #000;
+	-webkit-box-shadow: 0 -3px 45px #000;
+	box-shadow: 0 -3px 45px #000;
+}
+.sitewide .sawtooth {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 11px;
+	background: url(sawtooth.png) repeat-x;
+}
+header.sitewide .sawtooth {
+	background-position: center 0;
+	bottom: 0;
+	margin-bottom: -11px;
+}
+footer.sitewide .sawtooth {
+	background-position: center -11px;
+	top: 0;
+	margin-top: -11px;
+}
+header.sitewide h1 {
+	display: block;
+	width: 50%;
+	line-height: 1.2;
+	text-shadow: 0 -3px 2px #000;
+}
+header.sitewide .hl {
+	color: #ddd;
+}
+header.sitewide a,
+header.sitewide a:visited {
+	border-bottom: 0;
+	color: #777;
+}
+header.sitewide h1 a,
+header.sitewide h1 a span {
+	-moz-transition: color 0.3s linear;
+	-webkit-transition: color 0.3s linear;
+	-o-transition: color 0.3s linear;
+	-ms-transition: color 0.3s linear;
+	transition: color 0.3s linear;
+}
+header.sitewide h1 a:hover,
+header.sitewide h1 a:hover span {
+	color: #0af;
+}
+
+/* nav */
+header.sitewide nav {
+	position: absolute;
+	right: 100px;
+	top: 50%;
+	margin-top: -0.8em;
+}
+footer.sitewide nav {
+	text-align: center;
+}
+.sitewide nav a {
+	margin: 0 .5em;
+	padding: 5px 0;
+	border: none;
+	position: relative;
+}
+.sitewide nav a {
+	-moz-transition: all 0.2s linear;
+	-webkit-transition: all 0.2s linear;
+	-o-transition: all 0.2s linear;
+	-ms-transition: all 0.2s linear;
+	transition: all 0.2s linear;
+}
+.sitewide nav:hover a { /* do no target | */
+	color: #555;
+	text-shadow: 0 0 3px #aaa;
+}
+.sitewide nav a:hover {
+	color: #0af;
+	text-shadow: 0 -2px 1px #000;
+	top: -5px;
+}
+
+/* content */
+.content {
+	width: 70%;
+	margin: 0 auto;
+	padding: 7em 0 10em 0;
+	line-height: 1.6;
+	color: #252525;
+	position: relative;
+	z-index: 0;
+}
+.content h1 {
+	display: block;
+	margin: 1.5em 0 0.8em 0;
+}
+
+/* specific parts */
+code.shell,
+code.shell::before {
+	display: inline-block;
+	padding: 0.2em 0.4em;
+	margin: 0;
+	background: #f5f5f5;
+	border: 1px solid #e1e1e1;
+}
+code.shell::before {
+	content: '$';
+	color: #777;
+	background: #e2e2e2;
+	margin: -0.2em .6em -0.2em -0.4em;
+}
+
+.intro {
+	font-size: 1.5em;
+	color: #777;
+}
+.intro .hl {
+	color: #252525;
+	margin-bottom: 1.5em;
+}
+
+section {
+	margin: 2em 0;
+}
+
+.hanging {
+	position: absolute;
+	top: -5em;
+	right: 15%;
+	padding-top: 5em;
+	border: 1px solid #777;
+	z-index: 1;
+	-moz-box-shadow: 1px 2px 18px rgba(0,0,0,0.7);
+	-webkit-box-shadow: 1px 2px 18px rgba(0,0,0,0.7);
+	box-shadow: 1px 2px 18px rgba(0,0,0,0.7);
+	background: #252525;
+}
+.hanging a {
+	display: block;
+	padding: .7em;
+	color: #ddd;
+	font-size: 1.2em;
+	text-shadow: 0 -3px 2px #000;
+	text-align: center;
+	border: 0;
+	margin-top: -1.8em;
+	line-height: 1.4;
+	-moz-transition: margin 0.2s ease-out;
+	-webkit-transition: margin 0.2s ease-out;
+	-o-transition: margin 0.2s ease-out;
+	-ms-transition: margin 0.2s ease-out;
+	transition: margin 0.2s ease-out;
+}
+.hanging a:hover {
+	margin-top: 15px;
+}
+
+ul.jumpto li a {
+	border: 0;
+	color: #252525;
+	-moz-transition: all 0.2s linear;
+	-webkit-transition: all 0.2s linear;
+	-o-transition: all 0.2s linear;
+	-ms-transition: all 0.2s linear;
+	transition: all 0.2s linear;
+}
+ul.jumpto li {
+	-moz-transition: margin 0.2s linear;
+	-webkit-transition: margin 0.2s linear;
+	-o-transition: margin 0.2s linear;
+	-ms-transition: margin 0.2s linear;
+	transition: margin 0.2s linear;
+}
+ul.jumpto:hover li a {
+	color: #aaa;
+	text-shadow: 0 0 3px #888;
+}
+ul.jumpto li:hover {
+	margin-left: 5px;
+}
+ul.jumpto li:hover a {
+	text-shadow: none;
+	color: #252525;
+}
