@@ -10,12 +10,13 @@ html {
 	overflow-y: scroll;
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust: 100%;
-	min-height: 100%;
+	height: 100%;
 }
 
 body {
 	margin: 0;
 	padding: 0;
+	position: relative;
 	min-height: 100%;
 	z-index: 0;
 }
@@ -138,7 +139,10 @@ header.sitewide {
 	box-shadow: 0 5px 40px #000;
 }
 footer.sitewide {
-	padding: 1em 2.5em;
+	position: absolute;
+	bottom: 0;
+	padding: 1em 0;
+	width: 100%;
 	-moz-box-shadow: 0 -3px 45px #000;
 	-webkit-box-shadow: 0 -3px 45px #000;
 	box-shadow: 0 -3px 45px #000;
