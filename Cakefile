@@ -25,7 +25,7 @@ task 'deps', 'Reads src/deps.txt and includes it in generated HTML', ->
 
 task 'srclist', 'Reads src/deps.txt and makes html list items out of it', ->
     deps = fs.readFileSync "#{srcDir}/deps.txt", 'utf-8'
-    deps = deps.split('\n').filter (line) -> line and not line.match '^\s*#'
+    deps = deps.split('\n').filter (line) -> line and not ((line.match /^\s*#/) or (line.match /^libs\//))
     list = ( "<li><a href='#{d}.html'>#{d}</a></li>" for d in deps ).join ''
     fs.writeFile "docs/_includes/srclist.html", list, 'utf-8'
 
