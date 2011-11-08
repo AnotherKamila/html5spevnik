@@ -4,7 +4,7 @@ fs     = require 'fs'
 log = console.log
 
 srcDir   = 'src'
-buildDir = 'build'
+buildDir = 'docs/build'
 
 # -----------------------------------------------
 
@@ -24,7 +24,7 @@ task 'html', 'Create HTML files from Jade templates', ->
 task 'js', 'Compile CoffeeScript files', ->
     ensureDir buildDir, ->
         exec "coffee --compile --output #{buildDir} #{srcDir}/*.coffee", execCallback
-        exec "cp -r #{srcDir}/libs #{buildDir}", execCallback
+        exec "cp -r #{srcDir}/libs #{buildDir}/", execCallback
 
 task 'docs', 'Generate documentation/annotated source code with Docco', ->
     ensureDir 'docs/', ->
