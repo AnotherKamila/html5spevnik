@@ -1,0 +1,5 @@
+# This files lists the order in which JS files need to be loaded. It is used by
+# Cakefile to generate the <script> tags inside the HTML.
+
+libs/mootools
+Spevnik

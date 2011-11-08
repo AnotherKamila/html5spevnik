@@ -16,7 +16,7 @@ Spevnik =
     # For now only literal event names are supported, but regex support might be
     # added if the need arises.
     onEvent: (eventName, callback) ->
-        console.log "Events  : Adding event listener to `#{eventName}'" if @debug
+        console.log "Events: Adding event listener to `#{eventName}'" if @debug
 
         # I am using the `window` object here rather than creating a custom one
         # and extending it with Mootools Events. The reason is simply that I do
@@ -27,10 +27,10 @@ Spevnik =
     # cool way to pass messages between modules. Any relevant data attached to
     # that event should be passed inside the `eventObj` object.
     #
-    # Event names should follow the 'eventcategory.eventtype' convention wherever
-    # it makes sense.
+    # Event names should follow the 'eventcategory.eventtype' convention
+    # wherever it makes sense.
     fireEvent: (eventName, eventObj) ->
-        console.log "Events  : #{eventName} has fired." if @debug
+        console.log "Events: #{eventName} has fired." if @debug
         window.fireEvent eventName, eventObj
 
     # Initializing is handled by the `Loader` module. Here we just alias its

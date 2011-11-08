@@ -17,9 +17,22 @@ execCallback = (err, stdout, stderr) ->
 
 # -----------------------------------------------
 
-task 'html', 'Create HTML files from Jade templates', ->
+task 'deps', 'Reads src/deps.txt and includes it in generated HTML', ->
+    deps = fs.readFileSync "#{srcDir}/deps.txt", 'utf-8'
+    deps = deps.split('\n').filter (line) -> line and not line.match '^\s*#'
+    scripttags = ( "script(src='#{d}.js')" for d in deps ).join '\n'
+    fs.writeFile "#{srcDir}/deps.jade", scripttags, 'utf-8'
+
+task 'srclist', 'Reads src/deps.txt and makes html list items out of it', ->
+    deps = fs.readFileSync "#{srcDir}/deps.txt", 'utf-8'
+    deps = deps.split('\n').filter (line) -> line and not line.match '^\s*#'
+    list = ( "<li><a href='#{d}.html'>#{d}</a></li>" for d in deps ).join ''
+    fs.writeFile "docs/_includes/srclist.html", list, 'utf-8'
+
+task 'html', 'Create HTML from the Jade template', ->
+    invoke 'deps'
     ensureDir buildDir, ->
-        exec "jade --out #{buildDir} #{srcDir}/*.jade", execCallback
+        exec "jade --out #{buildDir} #{srcDir}/spevnik.jade", execCallback
 
 task 'js', 'Compile CoffeeScript files', ->
     ensureDir buildDir, ->
@@ -27,6 +40,7 @@ task 'js', 'Compile CoffeeScript files', ->
         exec "cp -r #{srcDir}/libs #{buildDir}/", execCallback
 
 task 'docs', 'Generate documentation/annotated source code with Docco', ->
+    invoke 'srclist'
     ensureDir 'docs/', ->
         exec "docco #{srcDir}/*.coffee", execCallback
 
