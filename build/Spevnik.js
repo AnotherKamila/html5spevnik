@@ -5,13 +5,13 @@
     debug: true,
     onEvent: function(eventName, callback) {
       if (this.debug) {
-        console.log("Events  : Adding event listener to `" + eventName + "'");
+        console.log("Events: Adding event listener to `" + eventName + "'");
       }
       return window.addEvent(eventName, callback);
     },
     fireEvent: function(eventName, eventObj) {
       if (this.debug) {
-        console.log("Events  : " + eventName + " has fired.");
+        console.log("Events: " + eventName + " has fired.");
       }
       return window.fireEvent(eventName, eventObj);
     },

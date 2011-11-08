@@ -13,7 +13,7 @@ Jump to:
 ========
 
 <ul class="jumpto">
-<li><a href="Spevnik.html">Spevnik.coffee</a></li>
+{% include srclist.html %}
 </ul>
 
 This listing is in topological order with regard to the files' dependencies.
