@@ -1,0 +1,14 @@
+<!DOCTYPE html>  <html> <head>   <title>Sentinel.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="DB.html">                 DB.coffee               </a>                                           <a class="source" href="Sentinel.html">                 Sentinel.coffee               </a>                                           <a class="source" href="Spevnik.html">                 Spevnik.coffee               </a>                                           <a class="source" href="Utils.html">                 Utils.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               Sentinel.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This file only serves as a sentinel for the modules loading stage.</p>
+
+<p>It is the last script in <code>&lt;head&gt;</code>, and since head scripts are executed
+synchronously in order, it will always be the last thing loaded (and
+executed).</p>
+
+<p>It fires an <code>allModulesLoaded</code> event, which then signals ''backend'' modules
+like <code>DB</code> that all ''client'' modules that were supposed to tell it something
+have by now done so, and its <code>init</code> method can now be called.</p>
+
+<p>For the automated dependency management that I am going to get at some point:
+Depends: all</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Spevnik</span><span class="p">.</span><span class="nx">fireEvent</span> <span class="s">&#39;allModulesLoaded&#39;</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
