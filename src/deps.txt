@@ -1,7 +1,10 @@
 # This files lists the order in which JS files need to be loaded. It is used by
 # Cakefile to generate the <script> tags inside the HTML.
 
+# libs/* is supposed to be at the beginning
 libs/mootools
+
+Utils
 Spevnik
-# DB
+#DB
 Sentinel

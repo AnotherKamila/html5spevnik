@@ -6,7 +6,7 @@
 #
 # It fires an `allModulesLoaded` event, which then signals ''backend'' modules
 # like `DB` that all ''client'' modules that were supposed to tell it something
-# have already done so, and its `init` method can now be called.
+# have by now done so, and its `init` method can now be called.
 #
 # For the automated dependency management that I am going to get at some point:
 # Depends: all
