@@ -11,10 +11,6 @@ top.top = top
 #
 # Pass it a name (can be in the form of `Foo.Bar.Baz`) and a function that
 # accepts a single argument and attaches public properties and methods to it.
-# Private properties can be defined inside the module as `@foo`, they are only
-# accessible to functions inside the module.
-#
-# Note: Methods should of course use `=>` if they want to keep the context.
 #
 # For examples look at existing modules.
 #
