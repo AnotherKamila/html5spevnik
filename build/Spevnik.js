@@ -1,16 +1,32 @@
 (function() {
   module('Spevnik', function(exports) {
-    var debug;
+    var debug, doEvent, fireDoneEvent;
     exports.version = '0.0.1';
     debug = true;
-    exports.onEvent = function(eventName, callback) {
-      return window.addEvent(eventName, callback);
+    exports.onEvent = function(type, callback) {
+      return document.addEventListener(type, callback);
     };
-    return exports.fireEvent = function(eventName, eventObj) {
+    exports.fireEvent = function(type, data) {
+      var e;
       if (debug) {
-        console.log("Events: " + eventName + " has fired.");
+        console.log("Events: `" + type + "' has fired");
       }
-      return window.fireEvent(eventName, eventObj);
+      window.addEventListener(type, fireDoneEvent);
+      return e = doEvent(type, Object.clone(data));
+    };
+    fireDoneEvent = function(e) {
+      if (debug) {
+        console.log("Events: `" + e.type + "' done processing");
+      }
+      window.removeEventListener(e.type, fireDoneEvent, false);
+      return doEvent(e.type + ':done', e.data);
+    };
+    return doEvent = function(type, data) {
+      var e;
+      e = document.createEvent('Events');
+      e.initEvent(type, true, true);
+      e.data = data;
+      return document.dispatchEvent(e);
     };
   });
 }).call(this);

@@ -1,5 +1,5 @@
 (function() {
-  var console, module, top;
+  var module, top, _base;
   top = (typeof exports !== "undefined" && exports !== null ? exports : void 0) || window;
   top.top = top;
   module = function(name, module_fn) {
@@ -13,8 +13,9 @@
     return module_fn(ns);
   };
   top.module = module;
+  (_base = top.document).head || (_base.head = document.getElementsByTagName('head')[0]);
   if (typeof console === "undefined" || console === null) {
-    console = {
+    top.console = {
       log: (function() {}),
       warn: (function() {})
     };
