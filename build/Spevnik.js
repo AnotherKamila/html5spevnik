@@ -1,7 +1,7 @@
 (function() {
-  module('Spevnik', function(exports) {
+  module('S', function(exports) {
     var debug, doEvent, fireDoneEvent;
-    exports.version = '0.0.1';
+    exports.version = '0.0';
     debug = true;
     exports.onEvent = function(type, callback) {
       return document.addEventListener(type, callback);

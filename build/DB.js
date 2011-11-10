@@ -1,6 +1,6 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-  module('Spevnik.DB', function(exports) {
+  module('S.DB', function(exports) {
     var db, debug, getExpectedVersion, indices, init, setupDB;
     debug = true;
     db = null;
@@ -40,17 +40,19 @@
           setVReq = db.setVersion(getExpectedVersion());
           return setVReq.onsuccess = setupDB;
         } else {
-          return Spevnik.fireEvent('DB.ready');
+          return S.fireEvent('DB.ready');
         }
       }, this);
     };
     setupDB = function(e) {
       var index, store;
-      console.log('Creating object store...');
-      store = db.createObjectStore("songs", {
-        keyPath: 'id',
-        autoIncrement: true
-      });
+      if (!db.objectStoreNames.contains('songs')) {
+        console.log('Creating object store...');
+        store = db.createObjectStore('songs', {
+          keyPath: 'id',
+          autoIncrement: true
+        });
+      }
       for (index in indices) {
         if (debug) {
           console.log("DB: Creating index for " + index);
@@ -59,11 +61,11 @@
           unique: false
         });
       }
-      return Spevnik.fireEvent('DB.ready');
+      return S.fireEvent('DB.ready');
     };
     getExpectedVersion = function() {
       var i;
-      return Spevnik.version + '|' + ((function() {
+      return S.version + '|' + ((function() {
         var _results;
         _results = [];
         for (i in indices) {
@@ -72,6 +74,6 @@
         return _results;
       })()).join(',');
     };
-    return Spevnik.onEvent('allModulesLoaded', init);
+    return S.onEvent('allModulesLoaded', init);
   });
 }).call(this);

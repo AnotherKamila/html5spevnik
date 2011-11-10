@@ -1,3 +1,3 @@
 (function() {
-  Spevnik.fireEvent('allModulesLoaded');
+  S.fireEvent('allModulesLoaded');
 }).call(this);
