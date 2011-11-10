@@ -2,8 +2,8 @@
 #
 # Provides Spevnik's event methods.
 
-module 'Spevnik', (exports) ->
-    exports.version = '0.0.1'
+module 'S', (exports) ->
+    exports.version = '0.0'
 
     debug = true
 

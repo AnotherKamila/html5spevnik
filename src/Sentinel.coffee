@@ -11,4 +11,4 @@
 # For the automated dependency management that I am going to get at some point:
 # Depends: all
 
-Spevnik.fireEvent 'allModulesLoaded'
+S.fireEvent 'allModulesLoaded'

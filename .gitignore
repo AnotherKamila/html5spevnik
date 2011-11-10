@@ -1,3 +1,5 @@
 build/
-**.swp
+**.sw?
 src/deps.jade
+src/spevnik.html
+tests/

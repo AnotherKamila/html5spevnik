@@ -16,7 +16,7 @@
 # access to (only) `data['text']`). The insides of `data` are completely
 # uninteresting for `DB`.
 
-module 'Spevnik.DB', (exports) ->
+module 'S.DB', (exports) ->
     debug = true
 
     # Holds a reference to the database.
@@ -57,14 +57,15 @@ module 'Spevnik.DB', (exports) ->
                 setVReq.onsuccess = setupDB
             else
                 # let the world know the DB is ready
-                Spevnik.fireEvent 'DB.ready'
+                S.fireEvent 'DB.ready'
 
     # Creates the necessary indices in a `setVersion` request
     setupDB = (e) ->
-        # TODO if this removes existing data, we're in trouble
-        console.log 'Creating object store...'
-        store = db.createObjectStore "songs",
-                    { keyPath: 'id', autoIncrement: true }
+        unless db.objectStoreNames.contains('songs')
+            console.log 'Creating object store...'
+            store = db.createObjectStore 'songs',
+                        { keyPath: 'id', autoIncrement: true }
+
         for index of indices
             console.log "DB: Creating index for #{index}" if debug
             # name and key path will be the same
@@ -73,11 +74,11 @@ module 'Spevnik.DB', (exports) ->
             store.createIndex index, index, { unique: false }
 
         # we're done
-        Spevnik.fireEvent 'DB.ready'
+        S.fireEvent 'DB.ready'
 
     # Generates the DB version based on the Spevnik version and active indices
-    getExpectedVersion = -> Spevnik.version+'|'+ ( i for i of indices ).join ','
+    getExpectedVersion = -> S.version+'|'+ ( i for i of indices ).join ','
 
     # We can create the database after we are certain that all modules have had
     # their say.
-    Spevnik.onEvent 'allModulesLoaded', init
+    S.onEvent 'allModulesLoaded', init
