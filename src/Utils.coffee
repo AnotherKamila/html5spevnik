@@ -24,5 +24,9 @@ module = (name, module_fn) ->
 
 top.module = module
 
+# HTML5 has a neat `document.head` thing, but we may need to emulate it in some
+# browsers
+top.document.head or= document.getElementsByTagName('head')[0]
+
 # make sure that console exists
-console = { log: (->), warn: (->) } unless console?
+top.console = { log: (->), warn: (->) } unless console?
