@@ -1,7 +1,4 @@
 # This file contains various utilities used across all other files.
-#
-# For the bright future with auto dependencies: push me to the beginning  
-# Depends: nothing
 
 # A helper function for convenient creation of namespaced modules
 #

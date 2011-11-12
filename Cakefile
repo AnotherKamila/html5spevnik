@@ -17,34 +17,39 @@ execCallback = (err, stdout, stderr) ->
 
 # -----------------------------------------------
 
-task 'deps', 'Reads src/deps.txt and includes it in generated HTML', ->
-    deps = fs.readFileSync "#{srcDir}/deps.txt", 'utf-8'
-    deps = deps.split('\n').filter (line) -> line and not line.match '^\s*#'
-    scripttags = ( "script(src='#{d}.js')" for d in deps ).join '\n'
-    fs.writeFile "#{srcDir}/deps.jade", scripttags, 'utf-8'
+task 'mkscripts', 'Generates a list of all libs and scripts to include in HTML', ->
+    exec "ls -1 libs/*.js", (err, stdout, stderr) ->
+        throw err if err
+        libs = stdout.split('\n').filter (line) -> !!line
+        res = ( "script(src='#{f}')" for f in libs ).join '\n'
+        fs.writeFile "#{buildDir}/libs.jade", res, 'utf-8'
 
-task 'srclist', 'Reads src/deps.txt and makes html list items out of it', ->
-    deps = fs.readFileSync "#{srcDir}/deps.txt", 'utf-8'
-    deps = deps.split('\n').filter (line) -> line and not ((line.match /^\s*#/) or (line.match /^libs\//))
-    list = ( "<li><a href='#{d}.html'>#{d}</a></li>" for d in deps ).join ''
-    fs.writeFile "docs/_includes/srclist.html", list, 'utf-8'
+    invoke 'js'
+    # Notice the glob pattern here and see
+    # http://stackoverflow.com/questions/4834353/what-is-up-with-a-z-meaning-a-za-z
+    # I have set LC_COLLATE to POSIX in my .bashrc
+    exec "ls -1 #{buildDir}/[A-Z]*.js", (err, stdout, stderr) ->
+        throw err if err
+        sources = stdout.split('\n').filter (line) -> !!line
+        res = ( "script(src='#{ f.replace buildDir + '/', '' }')" for f in sources ).join '\n'
+        fs.writeFile "#{buildDir}/sources.jade", res, 'utf-8'
 
 task 'html', 'Create HTML from the Jade template', ->
-    invoke 'deps'
+    invoke 'mkscripts'
     ensureDir buildDir, ->
-        exec "jade --out #{buildDir} #{srcDir}/spevnik.jade", execCallback
+        exec "cp #{srcDir}/spevnik.jade #{buildDir}/", execCallback
+        exec "jade --out #{buildDir} #{buildDir}/spevnik.jade", execCallback
 
 task 'js', 'Compile CoffeeScript files', ->
     ensureDir buildDir, ->
         exec "coffee --compile --output #{buildDir} #{srcDir}/*.coffee", execCallback
-        exec "cp -r #{srcDir}/libs #{buildDir}/", execCallback
+        exec "cp -r libs/ #{buildDir}/", execCallback
 
 task 'docs', 'Generate documentation/annotated source code with Docco', ->
-    invoke 'srclist'
     ensureDir 'docs/', ->
         exec "docco #{srcDir}/*.coffee", execCallback
 
 task 'all', 'Do all the stuff necessary to get a ready build', ->
-    invoke 'html'
     invoke 'js'
+    invoke 'html'
     invoke 'docs'

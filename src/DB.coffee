@@ -1,9 +1,5 @@
 # This module is responsible for handling the database. All transactions are
 # defined here.
-#
-# Depends: Spevnik
-#
-# (TODO add automatic dependencies management)
 
 # Structure
 # ---------
@@ -23,9 +19,12 @@ module 'S.DB', (exports) ->
     db = null
 
     # All modules that want to add metadata indices to the database need to use
-    # this method. Pass an array of strings -- the future index names.
+    # this method. It is made available to them inside the `data` property for
+    # the `DB.beforeSetup` event.
+    #
+    # Pass an array of strings -- the future index names.
+    addIndexFields = (arr) => indices[item] = true for item in arr
 
-    exports.addIndexFields = (arr) => indices[item] = true for item in arr
     # Holds the future indices for the DB. This object is populated by the
     # `addIndexFields` method. 
     indices = {}
@@ -79,6 +78,13 @@ module 'S.DB', (exports) ->
     # Generates the DB version based on the Spevnik version and active indices
     getExpectedVersion = -> S.version+'|'+ ( i for i of indices ).join ','
 
-    # We can create the database after we are certain that all modules have had
-    # their say.
-    S.onEvent 'allModulesLoaded', init
+    S.onEvent 'DB.beforeSetup:done', init
+
+    # once all modules are loaded, we can start emitting events
+    #
+    # **Important**: All modules are required to only start emitting events
+    # here. This might be automatized at some point. Or it might not.
+    S.onEvent 'allModulesLoaded', ->
+
+        # I want to initialize the DB
+        S.fireEvent 'DB.beforeSetup', { addIndexFields: addIndexFields }

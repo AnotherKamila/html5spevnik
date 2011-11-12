@@ -1,5 +1,6 @@
 build/
 **.sw?
-src/deps.jade
+src/libs.jade
+src/sources.jade
 src/spevnik.html
 tests/
