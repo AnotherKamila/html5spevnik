@@ -1,10 +1,10 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   module('S.DB', function(exports) {
-    var db, debug, getExpectedVersion, indices, init, setupDB;
+    var addIndexFields, db, debug, getExpectedVersion, indices, init, setupDB;
     debug = true;
     db = null;
-    exports.addIndexFields = __bind(function(arr) {
+    addIndexFields = __bind(function(arr) {
       var item, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = arr.length; _i < _len; _i++) {
@@ -74,6 +74,11 @@
         return _results;
       })()).join(',');
     };
-    return S.onEvent('allModulesLoaded', init);
+    S.onEvent('DB.beforeSetup:done', init);
+    return S.onEvent('allModulesLoaded', function() {
+      return S.fireEvent('DB.beforeSetup', {
+        addIndexFields: addIndexFields
+      });
+    });
   });
 }).call(this);
