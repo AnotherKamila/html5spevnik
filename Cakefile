@@ -24,11 +24,14 @@ task 'mkscripts', 'Generates a list of all libs and scripts to include in HTML',
         res = ( "script(src='#{f}')" for f in libs ).join '\n'
         fs.writeFile "#{buildDir}/libs.jade", res, 'utf-8'
 
+    # The ordering is OK in the following, since the only requirement is that
+    # submodules come after their module, which is always the case if their
+    # file names are `Module.Submodule.coffee` (note the capital S!!!) and we
+    # sort alphabetically in reverse order
     invoke 'js'
-    # Notice the glob pattern here and see
+    # about LC_COLLATE see
     # http://stackoverflow.com/questions/4834353/what-is-up-with-a-z-meaning-a-za-z
-    # I have set LC_COLLATE to POSIX in my .bashrc
-    exec "ls -1 #{buildDir}/[A-Z]*.js", (err, stdout, stderr) ->
+    exec "export LC_COLLATE=POSIX && ls -1 --reverse #{buildDir}/[A-Z]*.js", (err, stdout, stderr) ->
         throw err if err
         sources = stdout.split('\n').filter (line) -> !!line
         res = ( "script(src='#{ f.replace buildDir + '/', '' }')" for f in sources ).join '\n'

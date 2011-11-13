@@ -60,8 +60,11 @@ module 'S.DB', (exports) ->
 
     # Creates the necessary indices in a `setVersion` request
     setupDB = (e) ->
-        unless db.objectStoreNames.contains('songs')
-            console.log 'Creating object store...'
+        # if the store exists, just get a handle, otherwise create it
+        if db.objectStoreNames.contains 'songs'
+            store = e.target.transaction.objectStore 'songs'
+        else
+            console.log 'DB: Creating object store...' if debug
             store = db.createObjectStore 'songs',
                         { keyPath: 'id', autoIncrement: true }
 
@@ -78,6 +81,7 @@ module 'S.DB', (exports) ->
     # Generates the DB version based on the Spevnik version and active indices
     getExpectedVersion = -> S.version+'|'+ ( i for i of indices ).join ','
 
+    # Initialize the DB once everybody has said what they want in it
     S.onEvent 'DB.beforeSetup:done', init
 
     # once all modules are loaded, we can start emitting events
@@ -86,5 +90,5 @@ module 'S.DB', (exports) ->
     # here. This might be automatized at some point. Or it might not.
     S.onEvent 'allModulesLoaded', ->
 
-        # I want to initialize the DB
+        # allow modules to talk into the DB initialization
         S.fireEvent 'DB.beforeSetup', { addIndexFields: addIndexFields }
