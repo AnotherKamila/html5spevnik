@@ -12,7 +12,7 @@
         console.log("Events: `" + type + "' has fired");
       }
       window.addEventListener(type, fireDoneEvent);
-      return e = doEvent(type, Object.clone(data));
+      return e = doEvent(type, data);
     };
     fireDoneEvent = function(e) {
       if (debug) {
