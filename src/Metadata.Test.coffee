@@ -1,4 +1,4 @@
-# a test file to see if Metadata submodule does what it should (so far)
+# a test file to see if `Metadata` does what it should (so far)
 
 S.Metadata.register
     name: 'test'
