@@ -46,8 +46,12 @@
     };
     setupDB = function(e) {
       var index, store;
-      if (!db.objectStoreNames.contains('songs')) {
-        console.log('Creating object store...');
+      if (db.objectStoreNames.contains('songs')) {
+        store = e.target.transaction.objectStore('songs');
+      } else {
+        if (debug) {
+          console.log('DB: Creating object store...');
+        }
         store = db.createObjectStore('songs', {
           keyPath: 'id',
           autoIncrement: true
