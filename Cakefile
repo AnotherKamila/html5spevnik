@@ -38,8 +38,8 @@ task 'mkscripts', 'Generates a list of all libs and scripts to include in HTML',
         fs.writeFile "#{buildDir}/sources.jade", res, 'utf-8'
 
 task 'html', 'Create HTML from the Jade template', ->
-    invoke 'mkscripts'
     ensureDir buildDir, ->
+        invoke 'mkscripts'
         exec "cp #{srcDir}/spevnik.jade #{buildDir}/", execCallback
         exec "jade --out #{buildDir} #{buildDir}/spevnik.jade", execCallback
 

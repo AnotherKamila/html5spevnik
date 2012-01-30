@@ -12,36 +12,24 @@
 # access to (only) `data['text']`). The insides of `data` are completely
 # uninteresting for `DB`.
 
-module 'S.DB', (exports) ->
+S.register 'DB', (hooks) ->
     debug = true
 
     db = null
 
-    # ### addIndexFields (semi-public method) ###
-    #
-    # All modules that want to add metadata indices to the database need to use
-    # this method. It is made available to them inside the `data` object for
-    # the `DB.beforeSetup` event.
-    #
-    # Pass an array of strings: the future index names.
-    addIndexFields = (arr) => indices[item] = true for item in arr
+    hooks['init'] = ->
+        # let the outside world tell us what they want in the DB
+        S.run 'DB.beforeSetup', { addIndexField: addIndexField }
 
-    # The `indices` object holds the future indices for the DB. It is populated
-    # by the `addIndexFields` method. 
-    indices = {}
-
-    # ### init (private method) ###
-    #
-    # This function is run after all modules have registered their indices.
-    init = ->
+    # Initializes the DB
+    hooks['DB.beforeSetup:done'] = ->
         console.log 'DB: Initialization started' if debug
-        window.indexedDB or= webkitIndexedDB or mozIndexedDB or moz_indexedDB
+        window.indexedDB or= webkitIndexedDB or mozIndexedDB or moz_indexedDB # TODO maybe make a separate file for stuff like this
 
-        # open or create the database
         openReq = indexedDB.open 'spevnik', 'database for my pretty songbook'
         openReq.onerror = (e) -> console.warn 'ERR: DB: Cannot open DB: ' + e
 
-        openReq.onsuccess = (e) =>
+        openReq.onsuccess = (e) ->
             # store the handle to the DB
             db = e.target.result
             # DB events bubble, so this is my generic DB error handler (for now)
@@ -52,51 +40,50 @@ module 'S.DB', (exports) ->
             # because version has never been set, or because new modules have
             # been added), we need to change the indices and update the version.
             console.log "DB: Current version: #{db.version}" if debug
-            console.log "DB: Should be: #{getExpectedVersion()}" if debug
+            console.log "DB: Should be:       #{getExpectedVersion()}" if debug
+
+            # adds necessary indices on setVersion
             if db.version != getExpectedVersion()
+                console.log 'DB: initiating setVersion request...'
                 setVReq = db.setVersion getExpectedVersion()
-                setVReq.onsuccess = setupDB
+                setVReq.onsuccess = (e) -> # Creates the necessary indices in a `setVersion` request
+                    # if the store exists, just get a handle, otherwise create it
+                    if db.objectStoreNames.contains 'songs'
+                        store = e.target.transaction.objectStore 'songs'
+                    else
+                        console.log 'DB: Creating object store...' if debug
+                        store = db.createObjectStore 'songs',
+                                    { keyPath: 'id', autoIncrement: true }
+
+                    for index of indices
+                        console.log "DB: Creating index for #{index}" if debug
+                        # name and key path will be the same  
+                        # (TODO maybe specifying the options object should be possible)
+                        store.createIndex index, index, { unique: false } # TODO what happens if it already exists?
+
+                    # we're done
+                    #
+                    # (TODO if I see funny bugs, it might be because `createIndex` might be
+                    # async actually)
+                    S.run 'DB.ready'
             else
                 # otherwise we are done
-                S.fireEvent 'DB.ready'
+                S.run 'DB.ready'
 
-    # ### setupDB (private method) ###
+    # ### addIndexFields (semi-public method) ###
     #
-    # Creates the necessary indices in a `setVersion` request
-    setupDB = (e) ->
-        # if the store exists, just get a handle, otherwise create it
-        if db.objectStoreNames.contains 'songs'
-            store = e.target.transaction.objectStore 'songs'
-        else
-            console.log 'DB: Creating object store...' if debug
-            store = db.createObjectStore 'songs',
-                        { keyPath: 'id', autoIncrement: true }
+    # All modules that want to add metadata indices to the database need to use
+    # this method. It is made available to them inside the `data` object for
+    # the `DB.beforeSetup` event.
+    #
+    # Pass a string: the future index name.
+    addIndexField = (f) -> indices[f] = true
 
-        for index of indices
-            console.log "DB: Creating index for #{index}" if debug
-            # name and key path will be the same  
-            # (TODO maybe specifying the options object should be possible)
-            store.createIndex index, index, { unique: false }
-
-        # we're done
-        #
-        # (TODO if I see funny bugs, it might be because `createIndex` might be
-        # async actually)
-        S.fireEvent 'DB.ready'
+    # The `indices` object holds the future indices for the DB. It is populated
+    # by the `addIndexFields` method. 
+    indices = {}
 
     # ### getExpectedVersion (private helper) ###
     #
     # Generates the DB version based on the Spevnik version and active indices
     getExpectedVersion = -> S.version+'|'+ ( i for i of indices ).join ','
-
-    # Initialize the DB once everybody has said what they want in it
-    S.onEvent 'DB.beforeSetup:done', init
-
-    # once all modules are loaded, we can start emitting events
-    #
-    # **Important**: All modules are required to only start emitting events
-    # here. This might be automatized at some point. Or it might not.
-    S.onEvent 'allModulesLoaded', ->
-
-        # tell modules that they can talk into the DB initialization
-        S.fireEvent 'DB.beforeSetup', { addIndexFields: addIndexFields }

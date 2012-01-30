@@ -1,8 +1,10 @@
-# a test file to see if `Metadata` does what it should (so far)
+# a test metadata (sub)component
 
-S.Metadata.register
-    name: 'test'
-    friendlyName: 'Test Metadata'
-    # TODO write a encodeHtmlEntities function
-    toHTML: (value) -> return value
-    priority: 47
+S.register 'Metadata.Test', (hooks) ->
+
+    name = 'test'
+    friendlyName = 'Test Metadata'
+
+    # all metadata need to add their fields if they want to use them
+    hooks['DB.beforeSetup'] = (data) ->
+        data.addIndexField name
