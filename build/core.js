@@ -1,17 +1,21 @@
+(function() {
+  var S;
 
-  module('S', function(exports) {
+  S = top.S = {};
+
+  (function() {
     var components, debug;
-    exports.version = '0.0';
+    S.version = '0.0';
     debug = true;
     components = {};
-    exports.register = function(name, component_fn) {
+    S.register = function(name, component_fn) {
       if (debug) console.log("Registering component: " + name);
       components[name] = {
         __name__: name
       };
       return component_fn(components[name]);
     };
-    return exports.run = function(hookname, data) {
+    return S.run = function(hookname, data) {
       var c, i, _results;
       if (debug) console.log("Running hook: " + hookname);
       for (i in components) {
@@ -29,4 +33,6 @@
       }
       return _results;
     };
-  });
+  })();
+
+}).call(this);

@@ -10,8 +10,9 @@ events/hooks. </p>
 
 <p><strong>Modules are supposed to only care about themselves</strong>, i.e. I just tell the
 world what I want to do, maybe someone will say something, maybe not, that is
-their problem. (This will hopefully make it extremely easy to add new modules.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">module</span> <span class="s">&#39;S&#39;</span><span class="p">,</span> <span class="nf">(exports) -&gt;</span>
-    <span class="nv">exports.version = </span><span class="s">&#39;0.0&#39;</span>
+their problem. (This will hopefully make it extremely easy to add new modules.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">S = top.S = </span><span class="p">{}</span>
+<span class="nx">do</span> <span class="nf">() -&gt;</span>
+    <span class="nv">S.version = </span><span class="s">&#39;0.0&#39;</span>
 
     <span class="nv">debug = </span><span class="kc">true</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Contains all registered components' hooks.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">components = </span><span class="p">{}</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Allows components to register hooks. Executing a hook is the only way a
 component can be told to do something. Hooks are responses to events.</p>
@@ -24,12 +25,12 @@ all hooks on "something" have finished executing -- therefore you can wait
 for other modules to respond to something and then resume.</p>
 
 <p>(Note: "something:done:done" etc will not be supported, that really
-shouldn't be necessary.)</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">exports.register = </span><span class="nf">(name, component_fn) -&gt;</span>
+shouldn't be necessary.)</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">S.register = </span><span class="nf">(name, component_fn) -&gt;</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;Registering component: </span><span class="si">#{</span><span class="nx">name</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">if</span> <span class="nx">debug</span>
         <span class="nx">components</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="nv">__name__: </span><span class="nx">name</span> <span class="p">}</span>
         <span class="nx">component_fn</span> <span class="nx">components</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Runs a specified hook (optionally passing some event data as the 2nd
 argument). This causes all exported methods with name "<code>hookname</code>" of all
-registered components to be run.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">exports.run = </span><span class="nf">(hookname, data) -&gt;</span>
+registered components to be run.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">S.run = </span><span class="nf">(hookname, data) -&gt;</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;Running hook: </span><span class="si">#{</span><span class="nx">hookname</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">if</span> <span class="nx">debug</span>
         <span class="k">for</span> <span class="nx">i</span><span class="p">,</span><span class="nx">c</span> <span class="k">of</span> <span class="nx">components</span> <span class="k">when</span> <span class="nx">c</span><span class="p">[</span><span class="nx">hookname</span><span class="p">]</span><span class="o">?</span>
             <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;    * on </span><span class="si">#{</span><span class="nx">i</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">if</span> <span class="nx">debug</span>
