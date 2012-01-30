@@ -37,7 +37,7 @@ do () ->
     # (Note: "something:done:done" etc will not be supported, that really
     # shouldn't be necessary.)
     S.register = (name, component_fn) ->
-        console.log "Registering component: #{name}" if debug
+        log "Registering component: #{name}" if debug
         components[name] = { __name__: name }
         component_fn components[name]
 
@@ -45,11 +45,13 @@ do () ->
     # argument). This causes all exported methods with name "`hookname`" of all
     # registered components to be run.
     S.run = (hookname, data) ->
-        console.log "Running hook: #{hookname}" if debug
+        log "Running hook: #{hookname}" if debug
         for i,c of components when c[hookname]?
-            console.log "    * on #{i}" if debug
+            log "  - on #{i}" if debug
             c[hookname] data
         # we explicitly don't want to support this recursively
         for i,c of components when c[hookname + ':done']?
-            console.log "    = running :done on #{i}" if debug
+            console.log "  * running :done on #{i}" if debug
             c[hookname + ':done'] data
+
+log '=== Pre-initialization started ==='

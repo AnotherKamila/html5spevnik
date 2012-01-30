@@ -1,11 +1,12 @@
 # This file contains various utilities used across all other files.
 
 # I don't like window
-top = exports ? window
+top = exports ? this
 top.top = top
 
-# ### Other small things ###
-window.document.head or= document.getElementsByTagName('head')[0]
+# I do like logging
+top.log = (args...) -> console.log.apply console, args
+top.err = (args...) -> args.unshift 'ERR:'; console.warn.apply console, args
 
-# make sure that console exists
-window.console = { log: (->), warn: (->) } unless console?
+# make sure console exists
+window.console or= { log: (->), warn: (->) }

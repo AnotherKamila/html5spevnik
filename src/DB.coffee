@@ -23,40 +23,40 @@ S.register 'DB', (hooks) ->
 
     # Initializes the DB
     hooks['DB.beforeSetup:done'] = ->
-        console.log 'DB: Initialization started' if debug
+        log 'DB: Initialization started' if debug
         window.indexedDB or= webkitIndexedDB or mozIndexedDB or moz_indexedDB # TODO maybe make a separate file for stuff like this
 
         openReq = indexedDB.open 'spevnik', 'database for my pretty songbook'
-        openReq.onerror = (e) -> console.warn 'ERR: DB: Cannot open DB: ' + e
+        openReq.onerror = (e) -> err 'DB: Cannot open DB: ' + e
 
         openReq.onsuccess = (e) ->
             # store the handle to the DB
             db = e.target.result
             # DB events bubble, so this is my generic DB error handler (for now)
-            db.onerror = (e) -> console.warn 'ERR: DB: ' + e
+            db.onerror = (e) -> err 'DB: ' + e
 
             # `db.version` is a description of what the database looks like
             # (i.e. what indices there are). In case this does not match (either
             # because version has never been set, or because new modules have
             # been added), we need to change the indices and update the version.
-            console.log "DB: Current version: #{db.version}" if debug
-            console.log "DB: Should be:       #{getExpectedVersion()}" if debug
+            log "DB: Current version: #{db.version}" if debug
+            log "DB: Should be:       #{getExpectedVersion()}" if debug
 
             # adds necessary indices on setVersion
             if db.version != getExpectedVersion()
-                console.log 'DB: initiating setVersion request...'
+                log 'DB: initiating setVersion request...'
                 setVReq = db.setVersion getExpectedVersion()
                 setVReq.onsuccess = (e) -> # Creates the necessary indices in a `setVersion` request
                     # if the store exists, just get a handle, otherwise create it
                     if db.objectStoreNames.contains 'songs'
                         store = e.target.transaction.objectStore 'songs'
                     else
-                        console.log 'DB: Creating object store...' if debug
+                        log 'DB: Creating object store...' if debug
                         store = db.createObjectStore 'songs',
                                     { keyPath: 'id', autoIncrement: true }
 
                     for index of indices
-                        console.log "DB: Creating index for #{index}" if debug
+                        log "DB: Creating index for #{index}" if debug
                         # name and key path will be the same  
                         # (TODO maybe specifying the options object should be possible)
                         store.createIndex index, index, { unique: false } # TODO what happens if it already exists?

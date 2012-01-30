@@ -4,4 +4,5 @@
 # It is the last script in `<head>`, and since head scripts are executed
 # synchronously in order, it will always be the last thing loaded (and
 # executed).
+log '=== Component initialization started ==='
 S.run 'init'
