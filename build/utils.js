@@ -1,17 +1,27 @@
 (function() {
-  var top, _base;
+  var top;
+  var __slice = Array.prototype.slice;
 
-  top = typeof exports !== "undefined" && exports !== null ? exports : window;
+  top = typeof exports !== "undefined" && exports !== null ? exports : this;
 
   top.top = top;
 
-  (_base = window.document).head || (_base.head = document.getElementsByTagName('head')[0]);
+  top.log = function() {
+    var args;
+    args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    return console.log.apply(console, args);
+  };
 
-  if (typeof console === "undefined" || console === null) {
-    window.console = {
-      log: (function() {}),
-      warn: (function() {})
-    };
-  }
+  top.err = function() {
+    var args;
+    args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    args.unshift('ERR:');
+    return console.warn.apply(console, args);
+  };
+
+  window.console || (window.console = {
+    log: (function() {}),
+    warn: (function() {})
+  });
 
 }).call(this);

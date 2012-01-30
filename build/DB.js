@@ -10,36 +10,36 @@
     };
     hooks['DB.beforeSetup:done'] = function() {
       var openReq;
-      if (debug) console.log('DB: Initialization started');
+      if (debug) log('DB: Initialization started');
       window.indexedDB || (window.indexedDB = webkitIndexedDB || mozIndexedDB || moz_indexedDB);
       openReq = indexedDB.open('spevnik', 'database for my pretty songbook');
       openReq.onerror = function(e) {
-        return console.warn('ERR: DB: Cannot open DB: ' + e);
+        return err('DB: Cannot open DB: ' + e);
       };
       return openReq.onsuccess = function(e) {
         var setVReq;
         db = e.target.result;
         db.onerror = function(e) {
-          return console.warn('ERR: DB: ' + e);
+          return err('DB: ' + e);
         };
-        if (debug) console.log("DB: Current version: " + db.version);
-        if (debug) console.log("DB: Should be:       " + (getExpectedVersion()));
+        if (debug) log("DB: Current version: " + db.version);
+        if (debug) log("DB: Should be:       " + (getExpectedVersion()));
         if (db.version !== getExpectedVersion()) {
-          console.log('DB: initiating setVersion request...');
+          log('DB: initiating setVersion request...');
           setVReq = db.setVersion(getExpectedVersion());
           return setVReq.onsuccess = function(e) {
             var index, store;
             if (db.objectStoreNames.contains('songs')) {
               store = e.target.transaction.objectStore('songs');
             } else {
-              if (debug) console.log('DB: Creating object store...');
+              if (debug) log('DB: Creating object store...');
               store = db.createObjectStore('songs', {
                 keyPath: 'id',
                 autoIncrement: true
               });
             }
             for (index in indices) {
-              if (debug) console.log("DB: Creating index for " + index);
+              if (debug) log("DB: Creating index for " + index);
               store.createIndex(index, index, {
                 unique: false
               });
