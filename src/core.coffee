@@ -1,19 +1,21 @@
-# The really core stuff is defined here.
+# *Provides Spevnik's interface for registering hooks.*
 #
-# Provides Spevnik's interface for registering hooks.
-
 # Hooks/Events-based architecture
 # -------------------------------
 #
-# All message passing between modules will be done using the following methods
-# for running hooks.
+# All message passing between separate components will be done using the
+# following methods for running hooks.
 #
 # A component is some private stuff and a collection of responses to
 # events/hooks. 
 #
-# **Modules are supposed to only care about themselves**, i.e. I just tell the
-# world what I want to do, maybe someone will say something, maybe not, that is
-# their problem. (This will hopefully make it extremely easy to add new modules.
+# **Components are supposed to only care about themselves**, i.e. I just tell
+# the world what I want to do, maybe someone will say something, maybe not, that
+# is their problem. (This will hopefully make it extremely easy to add new
+# components.)
+
+#
+log '=== Pre-initialization started ==='
 
 S = top.S = {}
 do () ->
@@ -21,7 +23,6 @@ do () ->
 
     debug = true
 
-    # Contains all registered components' hooks.
     components = {}
 
     # Allows components to register hooks. Executing a hook is the only way a
@@ -54,4 +55,3 @@ do () ->
             console.log "  * running :done on #{i}" if debug
             c[hookname + ':done'] data
 
-log '=== Pre-initialization started ==='
