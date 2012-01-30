@@ -19,6 +19,8 @@
     return console.warn.apply(console, args);
   };
 
+  window.indexedDB || (window.indexedDB = webkitIndexedDB || mozIndexedDB || moz_indexedDB);
+
   window.console || (window.console = {
     log: (function() {}),
     warn: (function() {})

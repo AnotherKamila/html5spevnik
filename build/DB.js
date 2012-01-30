@@ -8,19 +8,22 @@
         addIndexField: addIndexField
       });
     };
+    addIndexField = function(f) {
+      return indices[f] = true;
+    };
+    indices = {};
     hooks['DB.beforeSetup:done'] = function() {
       var openReq;
-      if (debug) log('DB: Initialization started');
-      window.indexedDB || (window.indexedDB = webkitIndexedDB || mozIndexedDB || moz_indexedDB);
+      log('DB: Starting initialization');
       openReq = indexedDB.open('spevnik', 'database for my pretty songbook');
       openReq.onerror = function(e) {
-        return err('DB: Cannot open DB: ' + e);
+        return err('DB: Cannot open DB:', e);
       };
       return openReq.onsuccess = function(e) {
         var setVReq;
         db = e.target.result;
         db.onerror = function(e) {
-          return err('DB: ' + e);
+          return err('DB:', e);
         };
         if (debug) log("DB: Current version: " + db.version);
         if (debug) log("DB: Should be:       " + (getExpectedVersion()));
@@ -51,10 +54,6 @@
         }
       };
     };
-    addIndexField = function(f) {
-      return indices[f] = true;
-    };
-    indices = {};
     return getExpectedVersion = function() {
       var i;
       return S.version + '|' + ((function() {

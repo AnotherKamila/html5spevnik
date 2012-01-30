@@ -1,6 +1,8 @@
 (function() {
   var S;
 
+  log('=== Pre-initialization started ===');
+
   S = top.S = {};
 
   (function() {
@@ -34,7 +36,5 @@
       return _results;
     };
   })();
-
-  log('=== Pre-initialization started ===');
 
 }).call(this);
