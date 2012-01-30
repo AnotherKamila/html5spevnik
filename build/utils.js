@@ -1,5 +1,6 @@
 (function() {
   var module, _base;
+
   module = function(name, module_fn) {
     var item, ns, top, _i, _len, _ref;
     top = (typeof exports !== "undefined" && exports !== null ? exports : void 0) || window;
@@ -11,12 +12,16 @@
     }
     return module_fn(ns);
   };
+
   window.module = module;
+
   (_base = window.document).head || (_base.head = document.getElementsByTagName('head')[0]);
+
   if (typeof console === "undefined" || console === null) {
     window.console = {
       log: (function() {}),
       warn: (function() {})
     };
   }
+
 }).call(this);

@@ -1,10 +1,9 @@
-(function() {
-  S.Metadata.register({
-    name: 'test',
-    friendlyName: 'Test Metadata',
-    toHTML: function(value) {
-      return value;
-    },
-    priority: 47
+
+  S.register('Metadata.Test', function(hooks) {
+    var friendlyName, name;
+    name = 'test';
+    friendlyName = 'Test Metadata';
+    return hooks['DB.beforeSetup'] = function(data) {
+      return data.addIndexField(name);
+    };
   });
-}).call(this);

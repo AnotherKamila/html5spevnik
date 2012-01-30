@@ -1,32 +1,32 @@
-(function() {
+
   module('S', function(exports) {
-    var debug, doEvent, fireDoneEvent;
+    var components, debug;
     exports.version = '0.0';
     debug = true;
-    exports.onEvent = function(type, callback) {
-      return document.addEventListener(type, callback);
+    components = {};
+    exports.register = function(name, component_fn) {
+      if (debug) console.log("Registering component: " + name);
+      components[name] = {
+        __name__: name
+      };
+      return component_fn(components[name]);
     };
-    exports.fireEvent = function(type, data) {
-      var e;
-      if (debug) {
-        console.log("Events: `" + type + "' has fired");
+    return exports.run = function(hookname, data) {
+      var c, i, _results;
+      if (debug) console.log("Running hook: " + hookname);
+      for (i in components) {
+        c = components[i];
+        if (!(c[hookname] != null)) continue;
+        if (debug) console.log("    * on " + i);
+        c[hookname](data);
       }
-      window.addEventListener(type, fireDoneEvent);
-      return e = doEvent(type, data);
-    };
-    fireDoneEvent = function(e) {
-      if (debug) {
-        console.log("Events: `" + e.type + "' done processing");
+      _results = [];
+      for (i in components) {
+        c = components[i];
+        if (!(c[hookname + ':done'] != null)) continue;
+        if (debug) console.log("    = running :done on " + i);
+        _results.push(c[hookname + ':done'](data));
       }
-      window.removeEventListener(e.type, fireDoneEvent, false);
-      return doEvent(e.type + ':done', e.data);
-    };
-    return doEvent = function(type, data) {
-      var e;
-      e = document.createEvent('Events');
-      e.initEvent(type, true, true);
-      e.data = data;
-      return document.dispatchEvent(e);
+      return _results;
     };
   });
-}).call(this);

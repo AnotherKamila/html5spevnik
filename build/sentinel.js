@@ -1,3 +1,2 @@
-(function() {
-  S.fireEvent('allModulesLoaded');
-}).call(this);
+
+  S.run('init');
