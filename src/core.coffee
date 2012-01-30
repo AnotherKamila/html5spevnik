@@ -15,8 +15,9 @@
 # world what I want to do, maybe someone will say something, maybe not, that is
 # their problem. (This will hopefully make it extremely easy to add new modules.
 
-module 'S', (exports) ->
-    exports.version = '0.0'
+S = top.S = {}
+do () ->
+    S.version = '0.0'
 
     debug = true
 
@@ -35,7 +36,7 @@ module 'S', (exports) ->
     #
     # (Note: "something:done:done" etc will not be supported, that really
     # shouldn't be necessary.)
-    exports.register = (name, component_fn) ->
+    S.register = (name, component_fn) ->
         console.log "Registering component: #{name}" if debug
         components[name] = { __name__: name }
         component_fn components[name]
@@ -43,7 +44,7 @@ module 'S', (exports) ->
     # Runs a specified hook (optionally passing some event data as the 2nd
     # argument). This causes all exported methods with name "`hookname`" of all
     # registered components to be run.
-    exports.run = (hookname, data) ->
+    S.run = (hookname, data) ->
         console.log "Running hook: #{hookname}" if debug
         for i,c of components when c[hookname]?
             console.log "    * on #{i}" if debug
