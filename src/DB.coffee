@@ -12,35 +12,31 @@
 # access to (only) `data['text']`). The insides of `data` are completely
 # uninteresting for `DB`.
 
-S.register 'DB', (hooks) ->
+module 'DB', 'database interface on top of IndexedDB', ->
     debug = true
 
     db = null
 
-    hooks['init'] = ->
+    S.hookto 'allModulesLoaded', ->
         # let the outside world tell us what they want in the DB
-        S.run 'DB.beforeSetup', { addIndexField: addIndexField }
+        S.say 'DB.beforeSetup'
 
-    # Use this to add metadata indices to the database. Pass a string: the
-    # future index name.
-    addIndexField = (f) -> indices[f] = true
-
-    # The `indices` object holds the future indices for the DB. It is populated
-    # by the `addIndexFields` method. 
-    indices = {}
+    # holds the future indices for the DB; only the keys are important
+    indices = S.Metadata
 
     # Initializes the DB
-    hooks['DB.beforeSetup:done'] = ->
+    S.hookto 'DB.beforeSetup:done', ->
         log 'DB: Starting initialization'
 
         openReq = indexedDB.open 'spevnik', 'database for my pretty songbook'
+
         openReq.onerror = (e) -> err 'DB: Cannot open DB:', e
 
         openReq.onsuccess = (e) ->
             # store the handle to the DB
             db = e.target.result
             # DB events bubble, so this is my generic DB error handler (for now)
-            db.onerror = (e) -> err 'DB:', e
+            db.onerror = (e) -> err 'DB: ', e
 
             # `db.version` is a description of what the database looks like
             # (i.e. what indices there are). In case this does not match (either
@@ -50,7 +46,9 @@ S.register 'DB', (hooks) ->
             log "DB: Should be:       #{getExpectedVersion()}" if debug
 
             # adds necessary indices on setVersion
-            if db.version != getExpectedVersion()
+            if db.version == getExpectedVersion()
+                S.say 'DB.ready'
+            else
                 log 'DB: initiating setVersion request...'
                 setVReq = db.setVersion getExpectedVersion()
                 setVReq.onsuccess = (e) ->
@@ -69,11 +67,7 @@ S.register 'DB', (hooks) ->
                         store.createIndex index, index, { unique: false } # TODO what happens if it already exists?
 
                     # we're done
-                    #
-                    S.run 'DB.ready'
-            else
-                # otherwise we are done
-                S.run 'DB.ready'
+                    S.say 'DB.ready'
 
     # Generates the DB version based on the Spevnik version and active indices
     getExpectedVersion = -> S.version+'|'+ ( i for i of indices ).join ','

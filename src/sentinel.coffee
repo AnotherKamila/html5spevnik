@@ -5,4 +5,4 @@
 # synchronously in order, it will always be the last thing loaded (and
 # executed).
 log '=== Component initialization started ==='
-S.run 'init'
+S.say 'allModulesLoaded'
