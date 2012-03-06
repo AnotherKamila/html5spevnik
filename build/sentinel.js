@@ -1,4 +1,4 @@
 
   log('=== Component initialization started ===');
 
-  S.run('init');
+  S.say('allModulesLoaded');

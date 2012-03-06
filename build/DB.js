@@ -1,18 +1,13 @@
 
-  S.register('DB', function(hooks) {
-    var addIndexField, db, debug, getExpectedVersion, indices;
+  module('DB', 'database interface on top of IndexedDB', function() {
+    var db, debug, getExpectedVersion, indices;
     debug = true;
     db = null;
-    hooks['init'] = function() {
-      return S.run('DB.beforeSetup', {
-        addIndexField: addIndexField
-      });
-    };
-    addIndexField = function(f) {
-      return indices[f] = true;
-    };
-    indices = {};
-    hooks['DB.beforeSetup:done'] = function() {
+    S.hookto('allModulesLoaded', function() {
+      return S.say('DB.beforeSetup');
+    });
+    indices = S.Metadata;
+    S.hookto('DB.beforeSetup:done', function() {
       var openReq;
       log('DB: Starting initialization');
       openReq = indexedDB.open('spevnik', 'database for my pretty songbook');
@@ -23,11 +18,13 @@
         var setVReq;
         db = e.target.result;
         db.onerror = function(e) {
-          return err('DB:', e);
+          return err('DB: ', e);
         };
         if (debug) log("DB: Current version: " + db.version);
         if (debug) log("DB: Should be:       " + (getExpectedVersion()));
-        if (db.version !== getExpectedVersion()) {
+        if (db.version === getExpectedVersion()) {
+          return S.say('DB.ready');
+        } else {
           log('DB: initiating setVersion request...');
           setVReq = db.setVersion(getExpectedVersion());
           return setVReq.onsuccess = function(e) {
@@ -47,13 +44,11 @@
                 unique: false
               });
             }
-            return S.run('DB.ready');
+            return S.say('DB.ready');
           };
-        } else {
-          return S.run('DB.ready');
         }
       };
-    };
+    });
     return getExpectedVersion = function() {
       var i;
       return S.version + '|' + ((function() {

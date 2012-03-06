@@ -1,39 +1,56 @@
 (function() {
   var S;
-
-  log('=== Pre-initialization started ===');
+  var __slice = Array.prototype.slice;
 
   S = top.S = {};
 
   (function() {
-    var components, debug;
+    var hooks, services;
     S.version = '0.0';
-    debug = true;
-    components = {};
-    S.register = function(name, component_fn) {
-      if (debug) log("Registering component: " + name);
-      components[name] = {
-        __name__: name
+    S.debug = true;
+    hooks = {};
+    services = {};
+    top.module = function(name, desc, module_fn) {
+      var m;
+      m = {
+        name: name,
+        desc: desc
       };
-      return component_fn(components[name]);
+      module_fn(m);
+      return S.say('ModuleAdded', m);
     };
-    return S.run = function(hookname, data) {
-      var c, i, _results;
-      if (debug) log("Running hook: " + hookname);
-      for (i in components) {
-        c = components[i];
-        if (!(c[hookname] != null)) continue;
-        if (debug) log("  - on " + i);
-        c[hookname](data);
+    S.say = function() {
+      var args, f, hookname, _i, _len, _ref;
+      hookname = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      if (S.debug) log("H :: Running: " + hookname);
+      if (hooks[hookname] != null) {
+        _ref = hooks[hookname];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          f = _ref[_i];
+          f.apply(null, args);
+        }
       }
-      _results = [];
-      for (i in components) {
-        c = components[i];
-        if (!(c[hookname + ':done'] != null)) continue;
-        if (debug) console.log("  * running :done on " + i);
-        _results.push(c[hookname + ':done'](data));
+      if (!hookname.match(/:done$/)) return S.say(hookname + ':done');
+    };
+    S.hookto = function(name, fn) {
+      var _ref;
+      if (S.debug) log("H :: Registered " + name);
+      if ((_ref = hooks[name]) == null) hooks[name] = [];
+      return hooks[name].push(fn);
+    };
+    S.ask = function(interface) {
+      if (!(services[interface] != null)) {
+        throw new Error("Service not implemented: " + interface + " does not exist");
       }
-      return _results;
+      if (S.debug) log("S :: Asked for: " + interface);
+      return services[interface];
+    };
+    return S.provide = function(interface, obj) {
+      if (services[interface] != null) {
+        throw new Error("Service conflict: Service " + interface + " provided more than once");
+      }
+      if (S.debug) log("S :: Added " + interface);
+      return services[interface] = obj;
     };
   })();
 
