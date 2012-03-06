@@ -23,6 +23,7 @@ S = top.S = {}
 do ->
     S.version = '0.0'
     S.debug = true
+    S.DBG = {}
 
     hooks = {}
     services = {}

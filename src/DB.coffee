@@ -21,8 +21,8 @@ module 'DB', 'database interface on top of IndexedDB', ->
         # let the outside world tell us what they want in the DB
         S.say 'DB.beforeSetup'
 
-    # holds the future indices for the DB; only the keys are important
-    indices = S.Metadata
+    # holds the future indices for the DB; only the keys are important (set)
+    indices = S.Metadata ? {}
 
     # Initializes the DB
     S.hookto 'DB.beforeSetup:done', ->
@@ -35,6 +35,7 @@ module 'DB', 'database interface on top of IndexedDB', ->
         openReq.onsuccess = (e) ->
             # store the handle to the DB
             db = e.target.result
+            if S.debug then S.DBG.db = db
             # DB events bubble, so this is my generic DB error handler (for now)
             db.onerror = (e) -> err 'DB: ', e
 
@@ -61,10 +62,12 @@ module 'DB', 'database interface on top of IndexedDB', ->
                                     { keyPath: 'id', autoIncrement: true }
 
                     for index of indices
-                        log "DB: Creating index for #{index}" if debug
-                        # name and key path will be the same  
-                        # (TODO maybe specifying the options object should be possible)
-                        store.createIndex index, index, { unique: false } # TODO what happens if it already exists?
+                        # name and key path will be the same, options cannot be
+                        # specified currently (with only one implementation it
+                        # would be too implementation-specific)
+                        if not store.indexNames.contains index
+                            log "DB: Creating index for #{index}" if debug
+                            store.createIndex index, index, { unique: false }
 
                     # we're done
                     S.say 'DB.ready'
