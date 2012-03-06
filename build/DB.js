@@ -1,12 +1,12 @@
 
   module('DB', 'database interface on top of IndexedDB', function() {
-    var db, debug, getExpectedVersion, indices;
+    var db, debug, getExpectedVersion, indices, _ref;
     debug = true;
     db = null;
     S.hookto('allModulesLoaded', function() {
       return S.say('DB.beforeSetup');
     });
-    indices = S.Metadata;
+    indices = (_ref = S.Metadata) != null ? _ref : {};
     S.hookto('DB.beforeSetup:done', function() {
       var openReq;
       log('DB: Starting initialization');
@@ -17,6 +17,7 @@
       return openReq.onsuccess = function(e) {
         var setVReq;
         db = e.target.result;
+        if (S.debug) S.DBG.db = db;
         db.onerror = function(e) {
           return err('DB: ', e);
         };
@@ -39,10 +40,12 @@
               });
             }
             for (index in indices) {
-              if (debug) log("DB: Creating index for " + index);
-              store.createIndex(index, index, {
-                unique: false
-              });
+              if (!store.indexNames.contains(index)) {
+                if (debug) log("DB: Creating index for " + index);
+                store.createIndex(index, index, {
+                  unique: false
+                });
+              }
             }
             return S.say('DB.ready');
           };

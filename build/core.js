@@ -8,6 +8,7 @@
     var hooks, services;
     S.version = '0.0';
     S.debug = true;
+    S.DBG = {};
     hooks = {};
     services = {};
     top.module = function(name, desc, module_fn) {
