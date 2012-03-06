@@ -9,7 +9,10 @@ top.log = (args...) -> console.log.apply console, args
 top.err = (args...) -> args.unshift 'ERR:'; console.warn.apply console, args
 
 # ### browser stuff ###
-window.indexedDB or= webkitIndexedDB or mozIndexedDB or moz_indexedDB
+top.indexedDB or= webkitIndexedDB or mozIndexedDB or moz_indexedDB
+
+# alias addEvents
+Element.alias 'on', 'addEvents'; Elements.alias 'on', 'addEvents'; window.on = window.addEvents; document.on = document.addEvents # TODO find a way to alias it just once
 
 # make sure console exists
-window.console or= { log: (->), warn: (->) }
+top.console or= { log: (->), warn: (->) }
