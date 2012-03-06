@@ -19,9 +19,17 @@
     return console.warn.apply(console, args);
   };
 
-  window.indexedDB || (window.indexedDB = webkitIndexedDB || mozIndexedDB || moz_indexedDB);
+  top.indexedDB || (top.indexedDB = webkitIndexedDB || mozIndexedDB || moz_indexedDB);
 
-  window.console || (window.console = {
+  Element.alias('on', 'addEvents');
+
+  Elements.alias('on', 'addEvents');
+
+  window.on = window.addEvents;
+
+  document.on = document.addEvents;
+
+  top.console || (top.console = {
     log: (function() {}),
     warn: (function() {})
   });
