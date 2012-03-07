@@ -75,9 +75,9 @@ do ->
     S.ask = (interface) ->
         if not services[interface]? then throw new Error "Service not implemented: #{interface} does not exist"
         log "S :: Asked for: #{interface}" if S.debug
-        return services[interface] # TODO maybe make a read-only copy once Object.freeze works in most browsers
+        return services[interface]
 
-    S.provide = (interface, obj) ->
+    S.provide = (interface, impl) ->
         if services[interface]? then throw new Error "Service conflict: Service #{interface} provided more than once"
         log "S :: Added #{interface}" if S.debug
-        services[interface] = obj
+        services[interface] = impl

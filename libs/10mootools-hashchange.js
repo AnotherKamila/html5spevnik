@@ -2,11 +2,8 @@
 (function($,$$) {
     Element.Events.hashchange = {
         onAdd: function() {
-            var hash = window.location.hash;
-
             var hashchange = function(){
-                if (hash == self.location.hash) return;
-                else hash = self.location.hash;
+                hash = self.location.hash;
 
                 var value = (hash.charAt(0) == '#' ? hash.substr(1) : hash);
                 document.fireEvent('hashchange', value);

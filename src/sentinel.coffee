@@ -6,3 +6,5 @@
 # executed).
 log '=== Component initialization started ==='
 S.say 'allModulesLoaded'
+
+S.hookto 'allModulesLoaded:done', -> log '=== Initialization finished ==='
