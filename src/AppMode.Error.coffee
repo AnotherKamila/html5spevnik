@@ -6,4 +6,4 @@ module 'ErrorPage', 'displays error pages with the given message', ->
                 html:  -> ':-('
 
             title: -> S.ask('appMode.error').error.title()
-            html: -> new Element 'p', html: S.ask('appMode.error').error.html()
+            render: (c) -> c.grab new Element 'p', html: S.ask('appMode.error').error.html()
