@@ -2,10 +2,10 @@
 
     <span class="nx">S</span><span class="p">.</span><span class="nx">provide</span> <span class="s">&#39;appMode.error&#39;</span><span class="p">,</span>
             <span class="nv">error:</span>
-                <span class="nv">title: </span><span class="s">&#39;Oops, Error&#39;</span>
-                <span class="nv">html: </span> <span class="s">&#39;:-(&#39;</span>
+                <span class="nv">title: </span><span class="o">-&gt;</span> <span class="s">&#39;Oops, Error&#39;</span>
+                <span class="nv">html: </span> <span class="o">-&gt;</span> <span class="s">&#39;:-(&#39;</span>
 
             <span class="nv">title: </span><span class="o">-&gt;</span> <span class="nx">S</span><span class="p">.</span><span class="nx">ask</span><span class="p">(</span><span class="s">&#39;appMode.error&#39;</span><span class="p">).</span><span class="nx">error</span><span class="p">.</span><span class="nx">title</span><span class="p">()</span>
-            <span class="nv">html: </span><span class="o">-&gt;</span> <span class="k">new</span> <span class="nx">Element</span> <span class="s">&#39;p&#39;</span><span class="p">,</span> <span class="nv">html: </span><span class="nx">S</span><span class="p">.</span><span class="nx">ask</span><span class="p">(</span><span class="s">&#39;appMode.error&#39;</span><span class="p">).</span><span class="nx">error</span><span class="p">.</span><span class="nx">html</span><span class="p">()</span>
+            <span class="nv">render: </span><span class="nf">(c) -&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">grab</span> <span class="k">new</span> <span class="nx">Element</span> <span class="s">&#39;p&#39;</span><span class="p">,</span> <span class="nv">html: </span><span class="nx">S</span><span class="p">.</span><span class="nx">ask</span><span class="p">(</span><span class="s">&#39;appMode.error&#39;</span><span class="p">).</span><span class="nx">error</span><span class="p">.</span><span class="nx">html</span><span class="p">()</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

@@ -29,6 +29,9 @@
           },
           html: function() {
             return 'No way to handle the current URL.';
+          },
+          render: function(c) {
+            return c.set('html', err.html());
           }
         };
         try {
@@ -38,8 +41,9 @@
           return handler = err;
         }
       } finally {
-        content.empty().grab(handler.html());
         document.title = handler.title() + (" | spevnik v" + S.version);
+        content.empty();
+        handler.render(content);
         if (S.debug) log('Page: mode switch done');
       }
     };
