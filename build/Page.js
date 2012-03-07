@@ -1,6 +1,6 @@
 
   module('Page', 'the root widget, handles different app modes', function() {
-    var content;
+    var content, modeswitch;
     content = new Element('div#content');
     window.on({
       domready: function() {
@@ -11,10 +11,36 @@
       hashchange: function(hash) {
         var mode;
         mode = hash.slice(0, hash.indexOf('/'));
-        if (S.debug) return log("Page: hashchange --> switching mode to " + mode);
+        return modeswitch(mode !== '' ? mode : 'empty');
       }
     });
-    return S.hookto('allModulesLoaded', function() {
-      return window.fireEvent('hashchange', location.hash.charAt(0 === '#') ? location.hash.substr(1) : location.hash);
+    S.hookto('allModulesLoaded', function() {
+      return window.onhashchange();
     });
+    return modeswitch = function(mode) {
+      var err, handler;
+      if (S.debug) log("Page: hashchange --> switching mode to " + mode);
+      try {
+        return handler = S.ask("appMode." + mode);
+      } catch (mode_err) {
+        err = {
+          title: function() {
+            return 'Invalid URL';
+          },
+          html: function() {
+            return 'No way to handle the current URL.';
+          }
+        };
+        try {
+          handler = S.ask('appMode.error');
+          return handler.error = err;
+        } catch (err_err) {
+          return handler = err;
+        }
+      } finally {
+        content.empty().grab(handler.html());
+        document.title = handler.title() + (" | spevnik v" + S.version);
+        if (S.debug) log('Page: mode switch done');
+      }
+    };
   });

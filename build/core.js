@@ -46,12 +46,12 @@
       if (S.debug) log("S :: Asked for: " + interface);
       return services[interface];
     };
-    return S.provide = function(interface, obj) {
+    return S.provide = function(interface, impl) {
       if (services[interface] != null) {
         throw new Error("Service conflict: Service " + interface + " provided more than once");
       }
       if (S.debug) log("S :: Added " + interface);
-      return services[interface] = obj;
+      return services[interface] = impl;
     };
   })();
 
